@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { Button } from "@/components/ui/button"
+
 
 export default function Home() {
   return (
@@ -18,6 +20,8 @@ export default function Home() {
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
               src/app/page.tsx
             </code>
+            <Button>Click me</Button>
+
             .
           </li>
           <li>Save and see your changes instantly.</li>

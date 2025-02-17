@@ -10,20 +10,19 @@ const UsernameQuerySchema = z.object({
 export async function GET(request: Request) {
   //todo: use this in all other routs
   // not required in new nextJS api routes in newer versions
-  if (request.method !== "GET") {
-    return Response.json(
-      {
-        success: false,
-        message: "Invalid method",
-      },
-      { status: 405 }
-    );
-  }
+  // if (request.method !== "GET") {
+  //   return Response.json(
+  //     {
+  //       success: false,
+  //       message: "Invalid method",
+  //     },
+  //     { status: 405 }
+  //   );
+  // }
   await dbConnect();
 
   try {
     const { searchParams } = new URL(request.url);
-
     const queryParams = {
       username: searchParams.get("username"),
     };
@@ -52,6 +51,7 @@ export async function GET(request: Request) {
       username,
       isVerified: true,
     });
+
     if (existingVerifiedUser) {
       return Response.json(
         {
@@ -64,15 +64,15 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: true,
-        message: "Username is unique ",
+        message: "Username is unique",
       },
-      { status: 400 }
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error checking username", error);
     return Response.json(
       {
-        successs: false,
+        success: false,
         message: "Error checking username",
       },
       {
