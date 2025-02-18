@@ -7,7 +7,7 @@ const VerifyCodeQuerySchema = z.object({
   code: z.string().length(6),
 });
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   await dbConnect();
 
   try {
@@ -25,34 +25,32 @@ export async function GET(request: Request) {
       );
     }
 
-    const isCodevalid = user.verifyCode == code;
+    const isCodeValid = user.verifyCode == code;
     const isCodeNotExpired = new Date(user.verifyCodeExpires) > new Date();
 
-    if (!isCodevalid && isCodeNotExpired) {
+    if (isCodeValid && isCodeNotExpired) {
+      // Update the user's verification status
       user.isVerified = true;
       await user.save();
 
       return Response.json(
-        {
-          success: true,
-          message: "Account verified",
-        },
-        { status: 500 }
+        { success: true, message: "Account verified successfully" },
+        { status: 200 }
       );
-    } else if (!isCodevalid && !isCodeNotExpired) {
+    } else if (!isCodeNotExpired) {
+      // Code has expired
       return Response.json(
         {
           success: false,
-          message: "Code expired, please signup to get new code ",
+          message:
+            "Verification code has expired. Please sign up again to get a new code.",
         },
         { status: 400 }
       );
     } else {
+      // Code is incorrect
       return Response.json(
-        {
-          success: false,
-          message: "Invalid code",
-        },
+        { success: false, message: "Incorrect verification code" },
         { status: 400 }
       );
     }
