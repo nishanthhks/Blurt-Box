@@ -42,20 +42,21 @@ function Page() {
   const fetchAcceptMessage = useCallback(async () => {
     setIsSwitchLoading(true);
     try {
-      const response = await axios.get<ApiResponse>("/api/accept-message");
-      setValue("acceptMessages", response?.data?.isAcceptingMessage ?? false);
+      const response = await axios.get<ApiResponse>("/api/accept-messages");
+      setValue('acceptMessages', response.data.isAcceptingMessage ?? false);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
-        title: "Failed to fetch messages",
+        title: 'Error',
         description:
-          axiosError.response?.data.message || "failed to fetch message",
-        variant: "destructive",
+          axiosError.response?.data.message ??
+          'Failed to fetch message settings',
+        variant: 'destructive',
       });
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue]);
+  }, [setValue,toast]);
 
   const fetchMessages = useCallback(
     async (refresh: boolean = false) => {
@@ -181,13 +182,15 @@ function Page() {
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.length > 0 ? (
-          messages.map((message, index) => (
-            <MessageCard
-              //   key={message._id}
-              message={message}
-              onMessageDelete={handleDeleteMessage}
-            />
-          ))
+          messages.map((message, index) =>
+            messages.map((message) => (
+              <MessageCard
+                key={index} // Ensure every item has a unique key
+                message={message}
+                onMessageDelete={handleDeleteMessage}
+              />
+            ))
+          )
         ) : (
           <p>No messages to display.</p>
         )}

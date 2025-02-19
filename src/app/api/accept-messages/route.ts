@@ -3,6 +3,7 @@ import { authOptions } from "../auth/[...nextauth]/options";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import { User } from "next-auth";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -22,14 +23,21 @@ export async function POST(request: Request) {
     );
   }
 
-  const userId = user._id;
+  const userId = (user as any)._id;
   const { acceptMessages } = await request.json();
+
+  if (acceptMessages === undefined) {
+    return NextResponse.json(
+      { success: false, message: "Missing acceptMessages field" },
+      { status: 400 }
+    );
+  }
 
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
       {
-        isAcceptingMessages: acceptMessages,
+        isAcceptingMessage: acceptMessages,
       },
       { new: true }
     );
@@ -87,9 +95,11 @@ export async function GET(request: Request) {
   }
 
   const userId = user._id;
+  // console.log("userId", userId);
 
   try {
     const foundUser = await UserModel.findById(userId);
+    // console.log("foundUser", foundUser);
     if (!foundUser) {
       return Response.json(
         {
@@ -104,7 +114,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: true,
-        isAcceptingMessages: foundUser.isAcceptingMessage,
+        isAcceptingMessage: foundUser.isAcceptingMessage,
       },
       {
         status: 200,
