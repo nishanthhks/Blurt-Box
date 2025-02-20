@@ -5,4 +5,5 @@ export const messageSchema = z.object({
     .string()
     .min(1, { message: "Message must not be empty" })
     .max(500, { message: "Message must be at most 500 characters long" }),
+  username: z.string()
 });

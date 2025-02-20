@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   await dbConnect();
 
   const { username, content } = await request.json();
-
   try {
     const user = await UserModel.findOne({ username });
     if (!user) {
@@ -34,7 +33,9 @@ export async function POST(request: Request) {
     }
     const newMessage = { content, createdAt: new Date() };
     // type assertion -> https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions
+    console.log(newMessage);
     user.messages.push(newMessage as Message);
+    console.log(user, "----------");
     await user.save();
     return Response.json(
       {
