@@ -4,13 +4,14 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import { User } from "next-auth";
 import mongoose from "mongoose";
-import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET() {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
+  // console.log("user", user);
+  console.log("session", session);
 
   if (!session || !session.user) {
     return Response.json(
@@ -47,7 +48,7 @@ export async function GET(request: Request) {
       return Response.json(
         {
           success: false,
-          message: "User n0ot found",
+          message: "No messages found",
         },
         {
           status: 404,

@@ -1,10 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import axios, { AxiosError } from "axios";
-import { SuggestedMessagesResponse } from "@/types/ApiResponse";
 import { messageSchema } from "@/schemas/messageSchema";
 import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
@@ -34,7 +33,7 @@ function Page() {
 
   const [suggestedMessages, setSuggestedMessages] = useState<string[]>([]);
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       const response = await axios.post("/api/suggest-message");
       setSuggestedMessages(response.data.suggestedMessages);
@@ -46,11 +45,11 @@ function Page() {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]); // Include toast as a dependency
 
   useEffect(() => {
     fetchMessages();
-  }, []);
+  }, [fetchMessages]);
 
   const handleRefresh = () => {
     fetchMessages();
@@ -72,12 +71,14 @@ function Page() {
       if (error instanceof AxiosError) {
         toast({
           title: "Error",
-          description: error.response?.data?.message || "An error occurred, message not sent",
+          description:
+            error.response?.data?.message ||
+            "An error occurred, message not sent",
           variant: "destructive",
         });
       } else {
         toast({
-          title: "Error", 
+          title: "Error",
           description: "An error occurred, message not sent",
           variant: "destructive",
         });
@@ -112,18 +113,13 @@ function Page() {
           </div>
           <div className="flex flex-col items-center gap-4">
             <Card className="p-4 flex flex-col gap-2">
-              {suggestedMessages.map(
-                (
-                  message,
-                  index
-                ) => (
-                  <CardContent
-                    key={index}
-                    className="border rounded-md p-0 px-8 py-2">
-                    <p>{message}</p>
-                  </CardContent>
-                )
-              )}
+              {suggestedMessages.map((message, index) => (
+                <CardContent
+                  key={index}
+                  className="border rounded-md p-0 px-8 py-2">
+                  <p>{message}</p>
+                </CardContent>
+              ))}
             </Card>
             <Button className="w-[200px]" onClick={handleRefresh}>
               Refresh

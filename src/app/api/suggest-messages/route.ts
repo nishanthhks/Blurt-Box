@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const apiKey = process.env.GOOGLE_API_KEY;
     if (!apiKey) {

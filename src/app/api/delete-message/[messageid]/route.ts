@@ -1,15 +1,18 @@
 import { getServerSession } from "next-auth";
 import { User } from "next-auth";
-import mongoose from "mongoose";
 import dbConnect from "@/lib/dbConnect";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import UserModel from "@/models/User";
+import { use } from "react";
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { messageid: string } }
+  { params }: { params: Promise<{ messageid: string }> }
 ) {
-  const messageId = params.messageid;
+  // const resolvedParams = use(params); // Unwrap the Promise
+
+  const parameter = await params;
+  const messageId = parameter.messageid;
   await dbConnect();
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
@@ -20,7 +23,7 @@ export async function DELETE(
     );
   }
   try {
-    const updateResult =await UserModel.updateOne(
+    const updateResult = await UserModel.updateOne(
       { _id: user._id },
       { $pull: { messages: { _id: messageId } } }
     );
@@ -35,6 +38,7 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
+    console.log("failed to delete message", error);
     return Response.json(
       { success: false, message: "Internal server error" },
       { status: 500 }

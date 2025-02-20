@@ -1,11 +1,10 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
-import { z } from "zod";
-import { usernameValidation } from "@/schemas/signUpSchema";
+// import { z } from "zod";
 
-const VerifyCodeQuerySchema = z.object({
-  code: z.string().length(6),
-});
+// const VerifyCodeQuerySchema = z.object({
+//   code: z.string().length(6),
+// });
 
 export async function POST(request: Request) {
   await dbConnect();
