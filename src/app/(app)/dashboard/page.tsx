@@ -43,20 +43,20 @@ function Page() {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get<ApiResponse>("/api/accept-messages");
-      setValue('acceptMessages', response.data.isAcceptingMessage ?? false);
+      setValue("acceptMessages", response.data.isAcceptingMessage ?? false);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
-        title: 'Error',
+        title: "Error",
         description:
           axiosError.response?.data.message ??
-          'Failed to fetch message settings',
-        variant: 'destructive',
+          "Failed to fetch message settings",
+        variant: "destructive",
       });
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue,toast]);
+  }, [setValue, toast]);
 
   const fetchMessages = useCallback(
     async (refresh: boolean = false) => {
@@ -139,11 +139,11 @@ function Page() {
 
   return (
     <>
-          <Navbar />
+      <Navbar />
 
       <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
         <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
-  
+
         <div className="mb-4">
           <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{" "}
           <div className="flex items-center">
@@ -156,7 +156,7 @@ function Page() {
             <Button onClick={copyToClipboard}>Copy</Button>
           </div>
         </div>
-  
+
         <div className="mb-4">
           <Switch
             {...register("acceptMessages")}
@@ -169,7 +169,7 @@ function Page() {
           </span>
         </div>
         <Separator />
-  
+
         <Button
           className="mt-4"
           variant="outline"
@@ -185,15 +185,14 @@ function Page() {
         </Button>
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
           {messages.length > 0 ? (
-            messages.map((message, index) =>
-              // messages.map((message) => (
-                <MessageCard
-                  key={index} // Ensure every item has a unique key
-                  message={message}
-                  onMessageDelete={handleDeleteMessage}
-                />
-              // ))
-            )
+            messages.map((message, index) => (
+              <MessageCard
+                key={index} // Ensure every item has a unique key
+                message={message}
+                onMessageDelete={handleDeleteMessage}
+                backgroundImage={"/globe.svg"}
+              />
+            ))
           ) : (
             <p>No messages to display.</p>
           )}
