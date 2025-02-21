@@ -35,7 +35,7 @@ function Page() {
 
   const fetchMessages = useCallback(async () => {
     try {
-      const response = await axios.post("/api/suggest-message");
+      const response = await axios.post("/api/suggest-messages");
       setSuggestedMessages(response.data.suggestedMessages);
     } catch (error) {
       console.error(error);
