@@ -91,12 +91,20 @@ const MessageCard: React.FC<MessageCardProps> = ({
     }
   };
 
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+
   return (
-    <div className="w-full max-w-sm flex flex-col items-center space-y-4">
+    <div className="w-full max-w-[250px] flex flex-col items-center space-y-2">
       {/* Message with background */}
       <div
         ref={cardRef}
-        className="relative w-full aspect-square rounded-lg shadow-lg overflow-hidden">
+        className="relative w-full aspect-square rounded-lg shadow-md overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
@@ -104,18 +112,18 @@ const MessageCard: React.FC<MessageCardProps> = ({
             backgroundSize: "100% 100%",
           }}></div>
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <p className="text-white text-lg font-semibold text-center px-4">
+          <p className="text-white text-sm font-medium text-center px-3">
             {message.content}
           </p>
         </div>
       </div>
 
       {/* Action buttons */}
-      <div className="w-full flex justify-between px-4">
+      <div className="w-full flex justify-between px-1">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive">
-              <X className="w-5 h-5" />
+            <Button variant="destructive" size="icon" className="h-8 w-8">
+              <X className="w-3 h-3" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -133,14 +141,13 @@ const MessageCard: React.FC<MessageCardProps> = ({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        <Button variant="outline" onClick={handleShare}>
-          <Share2 className="w-5 h-5" />
+        <Button variant="outline" size="icon" className="h-8 w-8 bg-purple-50 hover:bg-purple-100 border-purple-200" onClick={handleShare}>
+          <Share2 className="w-3 h-3 text-purple-700" />
         </Button>
-        <Button variant="outline" onClick={handleDownload}>
-          <Download className="w-5 h-5" />
+        <Button variant="outline" size="icon" className="h-8 w-8 bg-purple-50 hover:bg-purple-100 border-purple-200" onClick={handleDownload}>
+          <Download className="w-3 h-3 text-purple-700" />
         </Button>
-        <Button variant="outline" >
-          {/* Upload Button */}
+        <Button variant="outline" size="icon" className="h-8 w-8 bg-purple-50 hover:bg-purple-100 border-purple-200">
           <input
             type="file"
             accept="image/*"
@@ -150,16 +157,15 @@ const MessageCard: React.FC<MessageCardProps> = ({
           />
           <label
             htmlFor="upload-bg"
-            className="cursor-pointer  text-blue-500 ">
-            <Upload className="inline w-5 h-5" /> Upload Background
+            className="cursor-pointer flex items-center">
+            <Upload className="w-3 h-3 text-purple-700" />
           </label>
-          
         </Button>
       </div>
 
       {/* Created At */}
-      <p className="text-sm text-gray-500">
-        {message.createdAt.toLocaleString()}
+      <p className="text-xs text-gray-500">
+        {formatDate(new Date(message.createdAt))}
       </p>
     </div>
   );
