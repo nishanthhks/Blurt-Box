@@ -10,7 +10,6 @@ import { signInSchema } from "@/schemas/signInSchema";
 import {
   Form,
   FormControl,
-  
   FormField,
   FormItem,
   FormLabel,
@@ -41,7 +40,7 @@ const Page = () => {
       redirect: false, // ✅ No redirect
       callbackUrl: "/dashboard", // ✅ Explicit callback URL
     });
-    
+
     if (result?.error) {
       if (result.error === "CredentialsSignin") {
         toast({
@@ -61,61 +60,76 @@ const Page = () => {
     if (result?.url) {
       router.replace(result.url); // ✅ This ensures the correct redirection
     }
-    
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-grey-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Welcome back Blurt Box
+    <div className="container mx-auto flex items-center justify-center min-h-screen py-8">
+      <div className="w-full max-w-md space-y-8 px-4">
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
+            Welcome back to Blurt Box
           </h1>
-          <p className="mb-4">Sign in to start your anonymous adventure</p>
-        </div>
-        {/* form */}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* email */}
-            <FormField
-              name="identifier"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email/username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Email/username" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* password */}
-            <FormField
-              name="password"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-<Button className='w-full' type="submit">Sign In</Button>
-</form>
-        </Form>
-        <div className="text-center mt-4">
-          <p>
-            Not a member yet{" "}
-            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
-              Sign up
-            </Link>
+          <p className="text-muted-foreground">
+            Sign in to continue your anonymous journey
           </p>
+        </div>
+
+        <div className="border rounded-lg p-8 bg-card shadow-sm">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* email */}
+              <FormField
+                name="identifier"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email/username</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your email or username"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* password */}
+              <FormField
+                name="password"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button className="w-full" type="submit">
+                Sign In
+              </Button>
+            </form>
+          </Form>
+
+          <div className="mt-6 text-center text-sm">
+            <p className="text-muted-foreground">
+              Not a member yet?{" "}
+              <Link
+                href="/sign-up"
+                className="font-medium text-primary hover:underline">
+                Sign up
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

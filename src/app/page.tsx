@@ -16,13 +16,15 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 export default function Home() {
   return (
     <>
-      <Navbar />
-      {/* <NewNavbar /> */}
+      {/* <Navbar /> */}
+      <NewNavbar />
       <section className="mt-8 sm:mt-11 px-4 sm:px-10 md:px-16 xl:px-48">
         <div className="container mx-auto text-center flex flex-col items-center">
           <h1 className="flex flex-col items-center text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-800 mb-3 sm:mb-4">
             Say It. Share It. Stay{" "}
-            <div className="text-purple-700 inline-block text-4xl sm:text-5xl md:text-6xl lg:text-7xl">Anonymous.</div>
+            <div className="text-purple-700 inline-block text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+              Anonymous.
+            </div>
           </h1>
           <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
             Share your unique link and receive anonymous messages, feedback, and
@@ -30,7 +32,11 @@ export default function Home() {
             safe space.
           </p>
           <div className="px-2">
-            <ModernAnimatedButtonVariant1 text="Get Your Link Now" />
+            <ModernAnimatedButtonVariant1
+              text="Get Your Link Now"
+              buttonText="Click"
+              buttonLink="/sign-up"
+            />
           </div>
           <div className="w-full mt-10 transition-all duration-300 ease-in-out hover:scale-105">
             <AspectRatio ratio={16 / 9}>
@@ -135,80 +141,21 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-black text-gray-300 py-12">
-  <div className="container mx-auto px-4">
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      <div>
-        <h3 className="text-xl font-bold mb-4 text-yellow-400">BlurtBox</h3>
-        <p className="text-gray-400">
-          Express yourself freely, stay anonymous.
+
+      <footer className="bg-black text-gray-400 py-6 text-center">
+        <p className="text-sm mb-2">
+          &copy; {new Date().getFullYear()} BlurtBox. All rights reserved.
         </p>
-      </div>
-      <div>
-        <h4 className="text-lg font-semibold mb-4 text-yellow-400">Quick Links</h4>
-        <ul className="space-y-2">
-          <li>
-            <a href="#" className="text-gray-400 hover:text-yellow-300">
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-gray-400 hover:text-yellow-300">
-              Features
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-gray-400 hover:text-yellow-300">
-              About Us
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-gray-400 hover:text-yellow-300">
-              Contact
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h4 className="text-lg font-semibold mb-4 text-yellow-400">Legal</h4>
-        <ul className="space-y-2">
-          <li>
-            <a href="#" className="text-gray-400 hover:text-yellow-300">
-              Privacy Policy
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-gray-400 hover:text-yellow-300">
-              Terms of Service
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-gray-400 hover:text-yellow-300">
-              Cookie Policy
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h4 className="text-lg font-semibold mb-4 text-yellow-400">Connect</h4>
-        <div className="flex space-x-4">
-          <a href="#" className="text-gray-400 hover:text-yellow-300">
-            Twitter
+        <div className="text-sm">
+          <a href="/disclaimer" className="hover:text-purple-400 mx-2">
+            Disclaimer
           </a>
-          <a href="#" className="text-gray-400 hover:text-yellow-300">
-            Instagram
-          </a>
-          <a href="#" className="text-gray-400 hover:text-yellow-300">
-            Facebook
+          <span>•</span>
+          <a href="/privacy-policy" className="hover:text-purple-400 mx-2">
+            Privacy Policy
           </a>
         </div>
-      </div>
-    </div>
-    <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-      <p>&copy; {new Date().getFullYear()} BlurtBox. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+      </footer>
     </>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import MessageCard from "@/components/MessageCard";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -24,6 +23,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Copy, User } from "lucide-react";
 import { updateUsernameSchema } from "@/schemas/updateUsernameSchema";
+import NewNavbar from "@/components/NewNavbar";
 
 function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -151,7 +151,7 @@ function Page() {
   if (!session || !session.user) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-        <Navbar />
+        <NewNavbar />
         <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800">Please Login</h2>
@@ -184,7 +184,7 @@ function Page() {
                 <LinkIcon className="h-5 w-5" />
                 Your Profile Link
               </h2>
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-center">
                 <div className="flex-1 relative max-w-xl">
                   <input
                     type="text"
@@ -211,7 +211,7 @@ function Page() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="py-6  text-black flex hover:bg-purple-200  items-center gap-2"
+                  className="py-4  bg-black text-white hover:bg-black/80 items-center gap-2 hover:text-white"
                   onClick={() => setShowProfileSection(!showProfileSection)}>
                   <User strokeWidth={2} className="h-10 w-10 " />
                   {showProfileSection ? "Hide Profile" : "View Profile"}
@@ -226,14 +226,14 @@ function Page() {
                   ? "max-h-[2000px] opacity-100"
                   : "max-h-0 opacity-0"
               }`}>
-              <div className=" md:flex md:gap-4 ">
+              <div className="flex flex-col md:flex-row gap-2 md:gap-4 ">
                 {/* Profile Information */}
                 <div className="bg-gray-100 p-6 rounded-lg md:flex-1">
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                     <User className="h-5 w-5" />
                     Profile Information
                   </h2>
-                  <div className="space-y-4">
+                  <div className="space-y-4 ">
                     <div className="flex items-center gap-3 bg-white p-4 rounded-md">
                       <div className="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
                         <User className="h-6 w-6 text-purple-700" />
@@ -247,12 +247,21 @@ function Page() {
                       <Button
                         variant="outline"
                         size="sm"
+                        className="bg-black text-white hover:bg-black/80 hover:text-white"
                         onClick={() =>
                           setIsUpdatingUsername(!isUpdatingUsername)
                         }>
                         {isUpdatingUsername ? "Cancel" : "Edit"}
                       </Button>
                     </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className=" py-4 text-white bg-red-500 flex items-center justify-center gap-2 hover:text-white hover:bg-red-600"
+                      onClick={() => signOut()}>
+                      <LogOut />
+                      Logout
+                    </Button>
 
                     <div className="bg-white p-4 rounded-md">
                       <p className="text-sm text-gray-500">Email</p>
@@ -313,15 +322,6 @@ function Page() {
                         </div>
                       </form>
                     )}
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full py-4 text-white bg-red-500 flex items-center justify-center gap-2 hover:text-white hover:bg-red-600"
-                      onClick={() => signOut()}>
-                      <LogOut />
-                      Logout
-                    </Button>
                   </div>
                 </div>
 
@@ -419,7 +419,7 @@ function Page() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-black"
+                  className="bg-black hover:bg-black/80"
                   onClick={(e) => {
                     e.preventDefault();
                     fetchMessages(true);
@@ -429,20 +429,21 @@ function Page() {
                   ) : (
                     <RefreshCcw className="w-full h-full text-white" />
                   )}
+                  <span className="hidden sm:block text-white">Refresh</span>
                 </Button>
               </div>
             </div>
 
             <Separator />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center">
               {messages.length > 0 ? (
                 messages.map((message, index) => (
                   <MessageCard
                     key={index}
                     message={message}
                     onMessageDelete={handleDeleteMessage}
-                    backgroundImage={"/globe.svg"}
+                    backgroundImage={"/message_card.jpeg"}
                   />
                 ))
               ) : (

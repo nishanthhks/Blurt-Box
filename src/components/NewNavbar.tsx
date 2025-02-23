@@ -3,8 +3,11 @@ import React from "react";
 import { Box, CircleArrowRight } from "lucide-react";
 import Link from "next/link";
 import BadgeShine from "./custom/BadgeShine";
+import { signOut, useSession } from "next-auth/react";
 
 function NewNavbar() {
+  const { data: session } = useSession();
+  const user = session?.user;
   return (
     <nav className="sticky top-0 z-50 flex justify-between items-center p-4 bg-white/80 backdrop-blur-md shadow-md border-b border-gray-300 px-6 md:px-16 xl:px-40">
       {/* left */}
@@ -19,10 +22,29 @@ function NewNavbar() {
       </div>
       {/* right */}
       <div className="flex gap-2 items-center">
-        <BadgeShine text="Login"></BadgeShine>
-        <div className="inline-flex sm:text-lg gap-2 items-center bg-purple-700 text-white border border-purple-500 px-3 rounded  text-sm py-1 sm:py-1.5">
-          Sign Up <CircleArrowRight />
-        </div>
+        {user ? (
+          <>
+            <Link href={"./dashboard"}>
+              <BadgeShine text="Dashboard"></BadgeShine>
+            </Link>
+            <button
+              onClick={() => signOut()}
+              className="inline-flex sm:text-lg gap-2 items-center bg-red-700 text-white border border-red-500 px-3 rounded  text-sm py-1 sm:py-1.5">
+              Logout <CircleArrowRight />
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href={"./sign-in"}>
+              <BadgeShine text="Login"></BadgeShine>
+            </Link>
+            <Link href={"./sign-up"}>
+              <button className="inline-flex sm:text-lg gap-2 items-center bg-purple-700 text-white border border-purple-500 px-3 rounded  text-sm py-1 sm:py-1.5">
+                Sign Up <CircleArrowRight />
+              </button>
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );
