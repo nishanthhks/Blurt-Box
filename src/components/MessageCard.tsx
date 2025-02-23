@@ -139,7 +139,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
         <Button variant="outline" onClick={handleDownload}>
           <Download className="w-5 h-5" />
         </Button>
-        <Button variant="outline" onClick={handleDownload}>
+        <Button variant="outline" >
           {/* Upload Button */}
           <input
             type="file"
