@@ -206,6 +206,12 @@ function Page() {
     }
   };
 
+  const [backgrounds, setBackgrounds] = useState<{ [key: string]: string }>({});
+
+  const handleBackgroundChange = (messageId: string, newBackground: string) => {
+    setBackgrounds((prev) => ({ ...prev, [messageId]: newBackground }));
+  };
+
   if (!session || !session.user) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -514,12 +520,15 @@ function Page() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center">
               {messages.length > 0 ? (
-                messages.map((message, index) => (
+                messages.map((message) => (
                   <MessageCard
-                    key={index}
+                    key={message._id as string}
                     message={message}
                     onMessageDelete={handleDeleteMessage}
-                    backgroundImage={"/message_card.jpeg"}
+                    backgroundImage={
+                      backgrounds[message._id as string] || "/message_card.jpeg"
+                    }
+                    onBackgroundChange={handleBackgroundChange}
                   />
                 ))
               ) : (

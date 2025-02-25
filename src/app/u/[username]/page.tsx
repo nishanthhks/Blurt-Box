@@ -32,6 +32,7 @@ function Page() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSubmitTime, setLastSubmitTime] = useState(0);
   const [isUsernameExists, setIsUsernameExists] = useState(false);
+  const [lastMessage, setLastMessage] = useState("Loading...");
 
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -41,8 +42,11 @@ function Page() {
     },
   });
 
+  const [checkingUsername, setCheckingUsername] = useState(false);
+
   const checkIfUsernameExists = async () => {
     try {
+      setCheckingUsername(true);
       console.log(slug);
       const response = await axios.get<ApiResponse>(
         `/api/check-user-exists?username=${slug}`
@@ -52,12 +56,13 @@ function Page() {
 
       if (response.status === 200) {
         setIsUsernameExists(true);
-      }
+      } 
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 404) {
           console.log("User not found.");
           setIsUsernameExists(false);
+          setLastMessage("User Does Not Exist");
         } else {
           toast({
             title: "Error",
@@ -66,6 +71,8 @@ function Page() {
           });
         }
       }
+    } finally {
+      setCheckingUsername(false);
     }
   };
 
@@ -75,19 +82,16 @@ function Page() {
 
   const [suggestedMessages, setSuggestedMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [didAiGenerate, setDidAiGenerate] = useState(true);
   const fetchMessages = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await axios.post("/api/suggest-messages");
       setSuggestedMessages(response.data.suggestedMessages);
+      setDidAiGenerate(true);
     } catch (error) {
       console.error(error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch suggested messages",
-        variant: "destructive",
-      });
+      setDidAiGenerate(false);
     } finally {
       setIsLoading(false);
     }
@@ -147,8 +151,11 @@ function Page() {
     <>
       <div className="flex h-screen flex-col gap-4 justify-center items-center">
         <span className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
-          User Doesnt Exist
-        </span>{" "}
+          {/* {isUsernameExists && checkingUsername
+            ? "Loading..."
+            : "User Does Not Exist"} */}
+          {lastMessage}
+        </span>
         <Link href="/" className="flex items-center ">
           <Box className="w-8 h-8" />
           <div className="flex text-2xl sm:text-3xl text-gray-500">
@@ -250,6 +257,13 @@ function Page() {
                   ))}
                 </div>
               </div>
+              {!didAiGenerate && (
+                <div className="justify-self-center">
+                  <p className="text-sm  md:text-base flex text-center font-bold text-red-400">
+                    Message Generation are temporary disabled.
+                  </p>
+                </div>
+              )}
               <div className="flex flex-col gap-4 justify-center items-center">
                 <Link href="/" className="flex items-center ">
                   <Box className="w-8 h-8" />
@@ -261,7 +275,7 @@ function Page() {
                 <ModernAnimatedButtonVariant1
                   text="Get Your Link Now"
                   buttonText="Click"
-                  buttonLink={"./"}
+                  buttonLink={"/"}
                 />
               </div>
             </div>
