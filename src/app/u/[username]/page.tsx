@@ -19,13 +19,19 @@ import { useParams } from "next/navigation";
 import { Box, Loader2, Send, Sparkle, VenetianMaskIcon } from "lucide-react";
 import Link from "next/link";
 import ModernAnimatedButtonVariant1 from "@/components/custom/ModernAnimatedButtonVariant1";
+import { useRouter } from "next/navigation";
+import { ApiResponse } from "@/types/ApiResponse";
+import NewNavbar from "@/components/NewNavbar";
 
 function Page() {
   const { toast } = useToast();
   const params = useParams();
   const slug = params.username as string;
+
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSubmitTime, setLastSubmitTime] = useState(0);
+  const [isUsernameExists, setIsUsernameExists] = useState(false);
 
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -34,6 +40,38 @@ function Page() {
       username: slug,
     },
   });
+
+  const checkIfUsernameExists = async () => {
+    try {
+      console.log(slug);
+      const response = await axios.get<ApiResponse>(
+        `/api/check-user-exists?username=${slug}`
+      );
+
+      console.log(response.data.message);
+
+      if (response.status === 200) {
+        setIsUsernameExists(true);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          console.log("User not found.");
+          setIsUsernameExists(false);
+        } else {
+          toast({
+            title: "Error",
+            description: "Internal server error",
+            variant: "destructive",
+          });
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkIfUsernameExists();
+  }, []);
 
   const [suggestedMessages, setSuggestedMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -105,7 +143,27 @@ function Page() {
     form.setValue("content", message);
   };
 
-  return (
+  return !isUsernameExists ? (
+    <>
+      <div className="flex h-screen flex-col gap-4 justify-center items-center">
+        <span className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
+          User Doesnt Exist
+        </span>{" "}
+        <Link href="/" className="flex items-center ">
+          <Box className="w-8 h-8" />
+          <div className="flex text-2xl sm:text-3xl text-gray-500">
+            <span className="text-purple-700 font-bold">Blurt</span>{" "}
+            <span className="font-bold">Box</span>
+          </div>
+        </Link>
+        <ModernAnimatedButtonVariant1
+          text="Get Your Link Now"
+          buttonText="Click"
+          buttonLink={"./"}
+        />
+      </div>
+    </>
+  ) : (
     <div className="min-h-screen bg-gray-200">
       <div className="container w-full mx-auto p-4 lg:px-[100px] xl:px-[300px]">
         <div className="bg-white rounded-lg p-6 md:p-8 ">

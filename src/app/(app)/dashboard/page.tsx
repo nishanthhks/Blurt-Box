@@ -10,6 +10,7 @@ import { acceptMessageSchema } from "@/schemas/acceptMessageSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
+import * as z from "zod";
 import {
   Loader2,
   RefreshCcw,
@@ -24,6 +25,17 @@ import { useForm } from "react-hook-form";
 import { Copy, User } from "lucide-react";
 import { updateUsernameSchema } from "@/schemas/updateUsernameSchema";
 import NewNavbar from "@/components/NewNavbar";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useDebounceCallback } from "usehooks-ts";
+import { signInSchema } from "@/schemas/signInSchema";
 
 function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -33,6 +45,7 @@ function Page() {
   const [isUpdatingUsername, setIsUpdatingUsername] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [updatedUsername, setUpdatedUsername] = useState("");
 
   const { toast } = useToast();
 
@@ -41,16 +54,16 @@ function Page() {
     setMessages(newMessages);
   };
 
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   const form = useForm({
     resolver: zodResolver(acceptMessageSchema),
   });
 
-  const updateUsernameForm = useForm({
+  const updateUsernameForm = useForm<z.infer<typeof updateUsernameSchema>>({
     resolver: zodResolver(updateUsernameSchema),
     defaultValues: {
-      newUsername: "",
+      updatedUsername: "",
       password: "",
     },
   });
@@ -146,6 +159,51 @@ function Page() {
       title: "URL Copied",
       description: "Profile URL has been copied to clipboard",
     });
+  };
+  const [usernameMessage, setUsernameMessage] = useState("");
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const debounced = useDebounceCallback(setUpdatedUsername, 300);
+
+  useEffect(() => {
+    if (!updatedUsername) return;
+    const checkUsernameUnique = async () => {
+      setIsCheckingUsername(true);
+      setUsernameMessage("");
+      try {
+        const response = await axios.get<ApiResponse>(
+          `/api/check-username-unique?username=${updatedUsername}`
+        );
+        setUsernameMessage(response.data.message);
+      } catch (error) {
+        const axiosError = error as AxiosError<ApiResponse>;
+        setUsernameMessage(
+          axiosError.response?.data.message || "An error occurred"
+        );
+      } finally {
+        setIsCheckingUsername(false);
+      }
+    };
+    checkUsernameUnique();
+  }, [updatedUsername]);
+
+  const onUpdateUsername = async (
+    data: z.infer<typeof updateUsernameSchema>
+  ) => {
+    try {
+      const response = await axios.put("/api/update-profile", data);
+      console.log(response);
+      // Refresh the session after a successful update
+      signOut();
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      toast({
+        title: "Failed to update username",
+        description:
+          axiosError.response?.data.message || "Failed to update username",
+      });
+    }
   };
 
   if (!session || !session.user) {
@@ -269,58 +327,76 @@ function Page() {
                     </div>
 
                     {isUpdatingUsername && (
-                      <form
-                        onSubmit={updateUsernameForm.handleSubmit(
-                          async (data) => {
-                            try {
-                              const response = await axios.post(
-                                "/api/update-profile",
-                                data
-                              );
-                              toast({
-                                title: "Success",
-                                description: "Username updated successfully",
-                              });
-                              setIsUpdatingUsername(false);
-                              // Refresh session to update UI
-                              window.location.reload();
-                            } catch (error) {
-                              const axiosError =
-                                error as AxiosError<ApiResponse>;
-                              toast({
-                                title: "Error",
-                                description:
-                                  axiosError.response?.data.message ||
-                                  "Failed to update username",
-                                variant: "destructive",
-                              });
-                            }
-                          }
-                        )}>
-                        <div className="space-y-2">
-                          <input
-                            type="text"
-                            placeholder="New username"
-                            className="w-full p-2 border rounded"
-                            {...updateUsernameForm.register("newUsername")}
+                      <Form {...updateUsernameForm}>
+                        <form
+                          onSubmit={updateUsernameForm.handleSubmit(
+                            onUpdateUsername
+                          )}
+                          className="space-y-6">
+                          <FormField
+                            name="updatedUsername"
+                            control={updateUsernameForm.control}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Update Username</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="Enter new username"
+                                    {...field}
+                                    onChange={(e) => {
+                                      field.onChange(e);
+                                      debounced(e.target.value);
+                                    }}
+                                  />
+                                </FormControl>
+                                {isCheckingUsername && (
+                                  <Loader2 className="animate-spin" />
+                                )}
+                                {!isCheckingUsername && usernameMessage && (
+                                  <p
+                                    className={`text-sm ${
+                                      usernameMessage === "Username is unique"
+                                        ? "text-green-500"
+                                        : "text-red-500"
+                                    }`}>
+                                    {usernameMessage}
+                                  </p>
+                                )}
+                                <FormMessage />
+                              </FormItem>
+                            )}
                           />
-                          <input
-                            type="password"
-                            placeholder="Confirm password"
-                            className="w-full p-2 border rounded"
-                            {...updateUsernameForm.register("password")}
+
+                          <FormField
+                            name="password"
+                            control={updateUsernameForm.control}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
                           />
-                          <div className="flex gap-2">
-                            <Button type="submit">Update</Button>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={() => setIsUpdatingUsername(false)}>
-                              Cancel
-                            </Button>
-                          </div>
-                        </div>
-                      </form>
+
+                          <Button
+                            className="w-full"
+                            type="submit"
+                            disabled={isSubmitting}>
+                            {isSubmitting ? (
+                              <Loader2 className="animate-spin" />
+                            ) : (
+                              "Sign Up"
+                            )}
+                          </Button>
+                        </form>
+                      </Form>
                     )}
                   </div>
                 </div>
