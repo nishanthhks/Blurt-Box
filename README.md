@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blurt Box
 
-## Getting Started
+Blurt Box is a **Next.js + TypeScript** application that allows users to receive **anonymous messages** through a unique public link. Built with **MongoDB, ShadCN, and Gemini API**, Blurt Box offers a sleek, interactive dashboard for managing received messages.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 🚀 Core Functionality
+Blurt Box allows users to create a public link for receiving ***anonymous messages.*** It integrates **Gemini AI** for message suggestions and offers a ***secure authentication*** system for login and registration.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 📊 User Dashboard
+Registered users can manage received messages in their dashboard, enabling or disabling message reception as needed. They can refresh the message list, delete unwanted messages, ***share directly to social media***, ***download as PNG***, and ***customize message card backgrounds.*** Users can also update their username or permanently delete their account, with each user assigned a ***unique public URL***.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🔗 Message Sending
+Senders remain ***anonymous***. Gemini AI offers ***message suggestions***, which can be refreshed for more options.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+![Next.js](https://img.shields.io/badge/Frontend/backend-Next.js-000?logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?logo=typescript&logoColor=white)
+![ShadCN](https://img.shields.io/badge/UI-ShadCN-18181B?logo=tailwindcss&logoColor=white)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb&logoColor=white)
+![Gemini API](https://img.shields.io/badge/AI-Gemini_API-4285F4?logo=google&logoColor=white)
+![Vercel](https://img.shields.io/badge/Hosting-Vercel-000?logo=vercel&logoColor=white)
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📦 Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Prerequisites
+- **Node.js 18 || >20** & **npm**
+- **Docker** (optional)
+- **Environment variables** (add in .env)
+    ```
+    MONGODB_URL=
+    RESEND_API_KEY=
+    NEXTAUTH_SECRET=
+    GOOGLE_API_KEY=
+    ```
 
-## Deploy on Vercel
+### Docker 
+    docker build -t blurt-box .
+    docker run -p 3000:3000 blurt-box
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### GitHub
+1. Clone the repository:
+   ```sh
+   https://github.com/nishanthhks/Blurt-Box.git
+   cd blurt-box
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Run locally:
+   ```sh
+   npm run dev
+   ```
+<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+  <img src="public/home_readme.png" alt="Home" width="400" style="margin: 10px;">
+  <img src="public/dashboard_readme.png" alt="Dashboard" width="400" style="margin: 10px;">
+  <img src="public/url_readme.png" alt="URL" width="400" style="margin: 10px;">
+  <img src="public/dashboard2_readme.png" alt="Dashboard 2" width="400" style="margin: 10px;">
+</div>
