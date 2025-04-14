@@ -34,29 +34,10 @@ Senders remain ***anonymous***. Gemini AI offers ***message suggestions***, whic
     RESEND_API_KEY=
     NEXTAUTH_SECRET=
     GOOGLE_API_KEY=
-    ```
 
-### Docker 
-    docker build -t blurt-box .
-    docker run -p 3000:3000 blurt-box
-
-### GitHub
-1. Clone the repository:
-   ```sh
-   https://github.com/nishanthhks/Blurt-Box.git
-   cd blurt-box
-   ```
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-3. Run locally:
-   ```sh
-   npm run dev
-   ```
 <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
-  <img src="public/home_readme.png" alt="Home" width="400" style="margin: 10px;">
-  <img src="public/dashboard_readme.png" alt="Dashboard" width="400" style="margin: 10px;">
-  <img src="public/url_readme.png" alt="URL" width="400" style="margin: 10px;">
-  <img src="public/dashboard2_readme.png" alt="Dashboard 2" width="400" style="margin: 10px;">
+  <img src="https://ik.imagekit.io/xaui7gvqp/blurtbox/home_readme.png?updatedAt=1744647209532" alt="Home" width="400" style="margin: 10px;">
+  <img src="https://ik.imagekit.io/xaui7gvqp/blurtbox/dashboard_readme.png?updatedAt=1744647209930" alt="Dashboard" width="400" style="margin: 10px;">
+  <img src="https://ik.imagekit.io/xaui7gvqp/blurtbox/url_readme.png?updatedAt=1744647201715" alt="URL" width="400" style="margin: 10px;">
+  <img src="https://ik.imagekit.io/xaui7gvqp/blurtbox/dashboard2_readme.png?updatedAt=1744647209925" alt="Dashboard 2" width="400" style="margin: 10px;">
 </div>
