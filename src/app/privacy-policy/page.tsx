@@ -9,7 +9,7 @@ export default function PrivacyPolicy() {
         </p>
         <ul className="list-disc pl-6 mb-6">
           <li>Email address (for account creation)</li>
-          <li>Messages sent through our platform (stored securely)</li>
+          <li>Messages sent through our platform (stored securely but not end-to-end encrypted)</li>
           <li>Basic usage analytics</li>
         </ul>
 
@@ -27,13 +27,15 @@ export default function PrivacyPolicy() {
         <h2 className="text-2xl font-semibold mb-4">Data Security</h2>
         <p className="mb-4">
           We implement industry-standard security measures to protect your data.
-          Messages are encrypted and stored securely on our servers.
+          However, messages are not end-to-end encrypted, which means they can be
+          accessed by authorized personnel if necessary (e.g., for moderation or
+          legal compliance).
         </p>
 
         <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
         <p>
           For privacy-related concerns, please contact us at
-          privacy@blurtbox.com
+          <a href="mailto:privacy@blurtbox.com" className="text-blue-600"> privacy@blurtbox.com</a>.
         </p>
       </div>
     </div>

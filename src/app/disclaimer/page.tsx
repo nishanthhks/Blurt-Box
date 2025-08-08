@@ -22,11 +22,16 @@ export default function Disclaimer() {
             illegal activity.
           </li>
           <li>
-            Users are encouraged to report any abusive or inappropriate content.
+            Users are encouraged to report any abusive or inappropriate content
+            in the GitHub repository.
           </li>
           <li>
-            While we implement security measures, no online platform can
+            We will implement security measures, no online platform can
             guarantee 100% security.
+          </li>
+          <li>
+            the application is currently in development and may have bugs or
+            issues that affect its performance and security to the registered user, while anonymous users will not have effect
           </li>
         </ul>
         <p>

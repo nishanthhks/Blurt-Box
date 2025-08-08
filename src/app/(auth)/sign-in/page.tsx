@@ -1,12 +1,15 @@
 "use client";
+
 import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useToast } from "@/hooks/use-toast";
 import { signInSchema } from "@/schemas/signInSchema";
+import { signIn } from "next-auth/react";
 import {
   Form,
   FormControl,
@@ -17,14 +20,32 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
+import { Loader2 } from "lucide-react";
 
-const Page = () => {
+/**
+ * Configuration for the form fields.
+ */
+const formFieldsConfig = [
+  {
+    name: "identifier" as const, // Use "as const" for stronger type inference
+    label: "Email/Username",
+    placeholder: "Enter your email or username",
+    type: "text",
+  },
+  {
+    name: "password" as const,
+    label: "Password",
+    placeholder: "Enter your password",
+    type: "password",
+  },
+];
+
+const SignInPage = () => {
+  // Initialize hooks for navigation and showing toast notifications.
   const { toast } = useToast();
   const router = useRouter();
 
-  // zod schema for form validation
-  // using already used schema for sign up
+  // 1. Setup the form using React Hook Form and Zod for validation.
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -33,32 +54,30 @@ const Page = () => {
     },
   });
 
+  // 2. Define the submit handler.
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    // Use  'signIn' function from NextAuth.js. "Credentials" to specify the provider defined in [...nextauth]/options.ts.
     const result = await signIn("Credentials", {
-      identifier: data.identifier,
-      password: data.password,
-      redirect: false, // ✅ No redirect
-      callbackUrl: "/dashboard", // ✅ Explicit callback URL
+      ...data,
+      redirect: false,
     });
 
+    // 3. Handle the result of the signIn attempt.
     if (result?.error) {
-      if (result.error === "CredentialsSignin") {
-        toast({
-          title: "Login Failed",
-          description: "Incorrect username or password",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: result.error,
-          variant: "destructive",
-        });
-      }
+      const errorMessage =
+        result.error === "CredentialsSignin"
+          ? "Incorrect username or password. Please try again."
+          : result.error;
+
+      toast({
+        title: "Login Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
     }
 
-    if (result?.url) {
-      router.replace(result.url); // ✅ This ensures the correct redirection
+    if (result?.ok && !result.error) {
+      router.replace("/dashboard");
     }
   };
 
@@ -77,45 +96,40 @@ const Page = () => {
         <div className="border rounded-lg p-8 bg-card shadow-sm">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* email */}
-              <FormField
-                name="identifier"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email/username</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your email or username"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Map over the config array to render form fields dynamically */}
+              {formFieldsConfig.map((fieldConfig) => (
+                <FormField
+                  key={fieldConfig.name}
+                  name={fieldConfig.name}
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{fieldConfig.label}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type={fieldConfig.type}
+                          placeholder={fieldConfig.placeholder}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
 
-              {/* password */}
-              <FormField
-                name="password"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter your password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={form.formState.isSubmitting} // Disable button while submitting
+              >
+                {form.formState.isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing In...
+                  </>
+                ) : (
+                  "Sign In"
                 )}
-              />
-
-              <Button className="w-full" type="submit">
-                Sign In
               </Button>
             </form>
           </Form>
@@ -136,4 +150,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default SignInPage;

@@ -212,6 +212,8 @@ function Page() {
     setBackgrounds((prev) => ({ ...prev, [messageId]: newBackground }));
   };
 
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+
   if (!session || !session.user) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -398,7 +400,7 @@ function Page() {
                             {isSubmitting ? (
                               <Loader2 className="animate-spin" />
                             ) : (
-                              "Sign Up"
+                              "Update"
                             )}
                           </Button>
                         </form>
@@ -447,9 +449,11 @@ function Page() {
                           <Button
                             variant="destructive"
                             disabled={
-                              deleteConfirmText !== session?.user?.username
+                              deleteConfirmText !== session?.user?.username ||
+                              isDeletingAccount
                             }
                             onClick={async () => {
+                              setIsDeletingAccount(true);
                               try {
                                 await axios.delete("/api/delete-profile");
                                 signOut();
@@ -463,9 +467,15 @@ function Page() {
                                     "Failed to delete account",
                                   variant: "destructive",
                                 });
+                              } finally {
+                                setIsDeletingAccount(false);
                               }
                             }}>
-                            Confirm Delete
+                            {isDeletingAccount ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              "Confirm Delete"
+                            )}
                           </Button>
                           <Button
                             variant="outline"
@@ -517,7 +527,7 @@ function Page() {
             </div>
 
             <Separator />
-
+            {/* Messages Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center">
               {messages.length > 0 ? (
                 messages.map((message) => (

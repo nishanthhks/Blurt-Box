@@ -21,7 +21,6 @@ import Link from "next/link";
 import ModernAnimatedButtonVariant1 from "@/components/custom/ModernAnimatedButtonVariant1";
 import { useRouter } from "next/navigation";
 import { ApiResponse } from "@/types/ApiResponse";
-import NewNavbar from "@/components/NewNavbar";
 
 function Page() {
   const { toast } = useToast();

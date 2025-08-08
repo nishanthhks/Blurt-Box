@@ -1,25 +1,70 @@
 import ModernAnimatedButtonVariant1 from "@/components/custom/ModernAnimatedButtonVariant1";
-import Navbar from "@/components/Navbar";
 import NewNavbar from "@/components/NewNavbar";
 import {
-  CircleArrowRight,
   Shield,
   MessageSquare,
-  Lock,
   Heart,
   Send,
   Users,
   Sparkles,
   Zap,
+  Box,
 } from "lucide-react";
 import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Link from "next/link";
 
+// Data for the "Features" section.
+const features = [
+  {
+    icon: <Shield className="w-8 h-8 text-purple-700" />,
+    title: "Complete Anonymity",
+    description:
+      "Your identity remains protected. Share thoughts freely without fear of judgment.",
+  },
+  {
+    icon: <MessageSquare className="w-8 h-8 text-purple-700" />,
+    title: "Instant Feedback",
+    description:
+      "Receive honest messages and feedback from your network instantly.",
+  },
+];
+
+// Data for the "How It Works" section.
+const howItWorksSteps = [
+  {
+    icon: <Users className="w-10 h-10 text-purple-700" />,
+    title: "Create Your Link",
+    description:
+      "Sign up in seconds and get your unique BlurtBox link to share with the world.",
+  },
+  {
+    icon: <Send className="w-10 h-10 text-purple-700" />,
+    title: "Share With Friends",
+    description:
+      "Share your link on social media or directly with friends and followers.",
+  },
+  {
+    icon: <Heart className="w-10 h-10 text-purple-700" />,
+    title: "Receive Messages",
+    description:
+      "Get anonymous messages, confessions, and honest feedback in your dashboard.",
+  },
+];
+
+// Data for the footer navigation links.
+const footerLinks = [
+  { href: "/disclaimer", label: "Disclaimer" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Service" },
+];
+
 export default function Home() {
   return (
     <>
       <NewNavbar />
+
+      {/* ===== HERO SECTION ===== */}
       <section className="mt-12 sm:mt-16 px-4 sm:px-10 md:px-16 xl:px-48 bg-gradient-to-br from-white via-purple-50 to-white">
         <div className="container mx-auto text-center flex flex-col items-center">
           <h1 className="flex flex-col items-center text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-800 mb-4 sm:mb-6">
@@ -54,7 +99,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* ===== FEATURES SECTION ===== */}
       <section className="py-24 px-4 sm:px-10 md:px-16 xl:px-48 bg-gradient-to-b from-white to-purple-100">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -65,39 +110,26 @@ export default function Home() {
               Why Choose <span className="text-purple-700">BlurtBox</span>?
             </h2>
           </div>
+          {/* map over the `features` array */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Feature 1 */}
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:border-purple-200">
-              <div className="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-200 transition-colors">
-                <Shield className="w-8 h-8 text-purple-700" />
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:border-purple-200">
+                <div className="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-200 transition-colors">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600">{feature.description}</p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                Complete Anonymity
-              </h3>
-              <p className="text-gray-600">
-                Your identity remains protected. Share thoughts freely without
-                fear of judgment.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:border-purple-200">
-              <div className="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-200 transition-colors">
-                <MessageSquare className="w-8 h-8 text-purple-700" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                Instant Feedback
-              </h3>
-              <p className="text-gray-600">
-                Receive honest messages and feedback from your network
-                instantly.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* ===== HOW IT WORKS SECTION ===== */}
       <section className="py-24 px-4 sm:px-10 md:px-16 xl:px-48 bg-gradient-to-b from-purple-50/50 to-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -108,79 +140,41 @@ export default function Home() {
               How It Works
             </h2>
           </div>
-
+          {/* map over the `howItWorksSteps` array*/}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="relative">
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 text-center h-full">
-                <div className="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto">
-                  <Users className="w-10 h-10 text-purple-700" />
+            {howItWorksSteps.map((step, index) => (
+              <div key={index} className="relative">
+                <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 text-center h-full">
+                  <div className="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    {step.icon}
+                  </div>
+                  {/* The step number is generated from the loop's index */}
+                  <span className="absolute -top-4 -left-4 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                    {index + 1}
+                  </span>
+                  <h3 className="text-2xl font-semibold mb-4">{step.title}</h3>
+                  <p className="text-gray-600">{step.description}</p>
                 </div>
-                <span className="absolute -top-4 -left-4 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
-                  1
-                </span>
-                <h3 className="text-2xl font-semibold mb-4">
-                  Create Your Link
-                </h3>
-                <p className="text-gray-600">
-                  Sign up in seconds and get your unique BlurtBox link to share
-                  with the world.
-                </p>
               </div>
-            </div>
-
-            <div className="relative">
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 text-center h-full">
-                <div className="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto">
-                  <Send className="w-10 h-10 text-purple-700" />
-                </div>
-                <span className="absolute -top-4 -left-4 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
-                  2
-                </span>
-                <h3 className="text-2xl font-semibold mb-4">
-                  Share With Friends
-                </h3>
-                <p className="text-gray-600">
-                  Share your link on social media or directly with friends and
-                  followers.
-                </p>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 text-center h-full">
-                <div className="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto">
-                  <Heart className="w-10 h-10 text-purple-700" />
-                </div>
-                <span className="absolute -top-4 -left-4 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
-                  3
-                </span>
-                <h3 className="text-2xl font-semibold mb-4">
-                  Receive Messages
-                </h3>
-                <p className="text-gray-600">
-                  Get anonymous messages, confessions, and honest feedback in
-                  your dashboard.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
 
-          <div className="mt-16 text-center">
-            <Link
-              href="/sign-up"
-              className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105">
-              Get Started Now
-              <Zap className="w-5 h-5" />
-            </Link>
+          <div className="mt-16 text-center w-[250px] container mx-auto flex flex-col items-center">
+            <ModernAnimatedButtonVariant1
+              text="Get Your Link Now"
+              buttonText="Click"
+              buttonLink="/sign-up"
+            />
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12">
+      {/* ===== FOOTER SECTION ===== */}
+      <footer className="bg-gray-900 text-gray-300 py-6">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-6">
-            <Sparkles className="w-6 h-6 text-purple-400 mr-2" />
+            <Box className="w-8 h-8 pr-2" />
+
             <span className="text-xl font-bold text-white">BlurtBox</span>
           </div>
           <p className="text-sm mb-6 max-w-md mx-auto">
@@ -188,24 +182,20 @@ export default function Home() {
             without boundaries.
           </p>
           <div className="flex justify-center space-x-6 mb-8">
-            <Link
-              href="/disclaimer"
-              className="text-gray-400 hover:text-purple-400 transition-colors">
-              Disclaimer
-            </Link>
-            <Link
-              href="/privacy-policy"
-              className="text-gray-400 hover:text-purple-400 transition-colors">
-              Privacy Policy
-            </Link>
-            <Link
-              href="/terms"
-              className="text-gray-400 hover:text-purple-400 transition-colors">
-              Terms of Service
-            </Link>
+            {/* We map over the `footerLinks` array to avoid repeating Link components. */}
+            {footerLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-gray-400 hover:text-purple-400 transition-colors">
+                {link.label}
+              </Link>
+            ))}
           </div>
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} BlurtBox. All rights reserved.
+            {/* Automatically updates the year to the current year. */}
+            {/* &copy; {new Date().getFullYear()} BlurtBox. All rights reserved. */}
+            &copy; 2025 BlurtBox. All rights reserved.
           </p>
         </div>
       </footer>
